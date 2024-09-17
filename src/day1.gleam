@@ -1,3 +1,4 @@
+import common
 import data/day1
 import gleam/int
 import gleam/io
@@ -13,9 +14,9 @@ pub fn main() {
 
 pub fn part1(s: String) {
   s
-  |> string.split("\n")
+  |> common.lines
   |> list.map(calibration_values)
-  |> list.fold(0, fn(a, b) { a + b })
+  |> common.sum
 }
 
 fn calibration_values(line) {
@@ -31,7 +32,7 @@ fn calibration_values(line) {
 
 pub fn part2(s: String) {
   s
-  |> string.split("\n")
+  |> common.lines
   |> list.map(fn(line) {
     line
     |> string.replace(each: "one", with: "onee")
@@ -52,5 +53,5 @@ pub fn part2(s: String) {
     |> string.replace(each: "nine", with: "9")
     |> calibration_values
   })
-  |> list.fold(0, fn(a, b) { a + b })
+  |> common.sum
 }
