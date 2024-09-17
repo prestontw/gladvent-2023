@@ -23,6 +23,45 @@ type Game {
 
 pub fn part1(s: String) {
   let reg = line_regex()
+  parse_games(s, reg)
+  |> list.filter_map(fn(game) {
+    let okay =
+      game.rounds
+      |> list.all(fn(pull) {
+        pull.red <= 12 && pull.green <= 13 && pull.blue <= 14
+      })
+    case okay {
+      True -> Ok(game.id)
+      False -> Error(Nil)
+    }
+  })
+  |> common.sum
+}
+
+fn power(game: Pull) {
+  game.red * game.blue * game.green
+}
+
+fn min_game(game: Game) {
+  game.rounds
+  |> list.fold(Pull(red: 0, green: 0, blue: 0), fn(acc, new) {
+    Pull(
+      red: int.max(acc.red, new.red),
+      green: int.max(acc.green, new.green),
+      blue: int.max(acc.blue, new.blue),
+    )
+  })
+}
+
+pub fn part2(s: String) {
+  let reg = line_regex()
+  parse_games(s, reg)
+  |> list.map(min_game)
+  |> list.map(power)
+  |> common.sum
+}
+
+fn parse_games(s, reg) {
   s
   |> common.lines
   |> list.map(fn(line) {
@@ -52,24 +91,6 @@ pub fn part1(s: String) {
       })
     Game(id, rounds)
   })
-  |> list.filter_map(fn(game) {
-    let okay =
-      game.rounds
-      |> list.all(fn(pull) {
-        pull.red <= 12 && pull.green <= 13 && pull.blue <= 14
-      })
-    case okay {
-      True -> Ok(game.id)
-      False -> Error(Nil)
-    }
-  })
-  |> common.sum
-}
-
-pub fn part2(s: String) {
-  s
-  |> common.lines
-  |> list.length
 }
 
 fn line_regex() {
