@@ -1,5 +1,5 @@
 import gleam/io
 
 pub fn main() {
-  io.println("Hello from gladvent_2023!")
+  io.println("Please run a specific day")
 }
