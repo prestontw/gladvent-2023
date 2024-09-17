@@ -15,6 +15,7 @@
             erlang
             rebar3
             just
+            watchexec
           ];
         };
       });
