@@ -8,8 +8,8 @@ import gleam/result
 import gleam/string
 
 pub fn main() {
-  io.println("day1 answer:" <> { day1.input() |> part1 |> int.to_string })
-  io.println("day2 answer:" <> { day1.input() |> part2 |> int.to_string })
+  io.println("part1 answer:" <> { day1.input() |> part1 |> int.to_string })
+  io.println("part2 answer:" <> { day1.input() |> part2 |> int.to_string })
 }
 
 pub fn part1(s: String) {
