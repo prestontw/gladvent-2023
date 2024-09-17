@@ -17,14 +17,9 @@ pub fn part1(s: String) {
     let chars = line |> string.to_graphemes
     let assert #(Some(first), Some(last)) = {
       use acc, char <- list.fold(chars, #(None, None))
-      {
-        case char |> int.base_parse(10) {
-          Ok(num) -> {
-            #(option.or(acc.0, Some(num)), Some(num))
-          }
-          Error(_) -> acc
-        }
-      }
+      int.parse(char)
+      |> result.map(fn(num) { #(option.or(acc.0, Some(num)), Some(num)) })
+      |> result.unwrap(acc)
     }
     first * 10 + last
   })
