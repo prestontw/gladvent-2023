@@ -1,11 +1,6 @@
 import data/day0 as data
 import day0
-import gleeunit
 import gleeunit/should
-
-pub fn main() {
-  gleeunit.main()
-}
 
 // gleeunit test functions end in `_test`
 pub fn part1_test() {
