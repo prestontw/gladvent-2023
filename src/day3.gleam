@@ -6,6 +6,7 @@ import gleam/io
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/result
+import gleam/set
 import gleam/string
 
 pub fn main() {
@@ -22,7 +23,78 @@ type Item {
   Number(Int)
 }
 
+fn is_symbol(item: Item) {
+  case item {
+    Symbol(_) -> True
+    Number(_) -> False
+  }
+}
+
+fn adjacent_positions(pos) {
+  let #(row, col) = pos
+  [
+    #(row - 1, col - 1),
+    #(row - 1, col),
+    #(row - 1, col + 1),
+    #(row, col - 1),
+    #(row, col + 1),
+    #(row + 1, col - 1),
+    #(row + 1, col),
+    #(row + 1, col + 1),
+  ]
+}
+
 pub fn part1(s: String) {
+  let #(map, legend) = s |> map_and_legend
+  // map over all numbers in legend,
+  map
+  |> dict.to_list
+  |> list.filter_map(fn(item) {
+    let #(pos, start) = item
+    // if pos is adjacent to symbol, return start
+    let adjacent_to_symbol =
+      pos
+      |> adjacent_positions
+      |> list.any(fn(pos) {
+        let item =
+          map
+          |> dict.get(pos)
+          |> option.from_result
+          |> option.then(fn(starting_pos) {
+            legend |> dict.get(starting_pos) |> option.from_result
+          })
+        case item {
+          Some(Symbol(_)) -> True
+          _ -> False
+        }
+      })
+    case adjacent_to_symbol {
+      True -> Ok(start)
+      _ -> Error(Nil)
+    }
+  })
+  |> set.from_list
+  |> set.to_list
+  |> list.filter_map(fn(starting_pos) {
+    legend
+    |> dict.get(starting_pos)
+    |> result.then(fn(item) {
+      case item {
+        Number(x) -> Ok(x)
+        _ -> Error(Nil)
+      }
+    })
+  })
+  |> common.sum
+}
+
+pub fn part2(s: String) {
+  s
+  |> common.lines
+  |> list.length
+}
+
+fn map_and_legend(s: String) {
   s
   |> common.lines
   |> list.index_fold(#(dict.new(), dict.new()), fn(acc, line, row_index) {
@@ -101,12 +173,4 @@ pub fn part1(s: String) {
       )
     })
   })
-  |> io.debug
-  3
-}
-
-pub fn part2(s: String) {
-  s
-  |> common.lines
-  |> list.length
 }

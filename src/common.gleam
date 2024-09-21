@@ -20,6 +20,20 @@ pub fn map_or_unwrap(opt: Option(a), init: b, f: fn(a) -> b) -> b {
   opt |> option.map(f) |> option.unwrap(init)
 }
 
+pub fn then_some(b: Bool, v) {
+  case b {
+    True -> Some(v)
+    False -> None
+  }
+}
+
+pub fn then_ok(b: Bool, v, e) {
+  case b {
+    True -> Ok(v)
+    False -> Error(e)
+  }
+}
+
 pub fn grid(s: String, string_to_item: fn(String) -> Result(item, Nil)) {
   let grid_lines = s |> lines
   let number_rows = grid_lines |> list.length
