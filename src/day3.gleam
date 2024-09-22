@@ -89,9 +89,34 @@ pub fn part1(s: String) {
 }
 
 pub fn part2(s: String) {
-  s
-  |> common.lines
-  |> list.length
+  let #(map, legend) = s |> map_and_legend
+  legend
+  |> dict.to_list
+  |> list.filter_map(fn(tup) {
+    let #(pos, treasure) = tup
+    case treasure {
+      Symbol("*") -> Ok(pos)
+      _ -> Error(Nil)
+    }
+  })
+  |> list.filter_map(fn(pos) {
+    let adj_starts =
+      pos
+      |> adjacent_positions
+      |> list.filter_map(fn(pos) { map |> dict.get(pos) })
+      |> set.from_list
+    let adj_items =
+      adj_starts
+      |> set.map(fn(start_pos) {
+        legend |> dict.get(start_pos) |> result.unwrap(Symbol("?"))
+      })
+      |> set.to_list
+    case adj_items {
+      [Number(x), Number(y)] -> Ok(x * y)
+      _ -> Error(Nil)
+    }
+  })
+  |> common.sum
 }
 
 fn map_and_legend(s: String) {
