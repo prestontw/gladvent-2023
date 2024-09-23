@@ -1,5 +1,6 @@
 import gleam/dict
 import gleam/int
+import gleam/io
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/string
@@ -32,6 +33,51 @@ pub fn then_ok(b: Bool, v, e) {
     True -> Ok(v)
     False -> Error(e)
   }
+}
+
+fn inner_fib(n, cache) {
+  case n {
+    0 | 1 -> #(1, cache)
+    n -> {
+      case cache |> dict.get(n) {
+        Ok(ret) -> #(ret, cache) |> io.debug
+        Error(_) -> {
+          let #(result1, cache) = inner_fib(n - 1, cache)
+          let #(result2, cache) = inner_fib(n - 2, cache)
+          let ret = result1 + result2
+          let cache = cache |> dict.insert(n, ret) |> io.debug
+          #(ret, cache)
+        }
+      }
+    }
+  }
+}
+
+pub fn fib(n) {
+  let #(result, _) = inner_fib(n, dict.new())
+  result
+}
+
+fn inner_fact(n, cache) {
+  case n {
+    0 | 1 -> #(1, cache)
+    n -> {
+      case cache |> dict.get(n) {
+        Ok(ret) -> #(ret, cache) |> io.debug
+        Error(_) -> {
+          let #(result, cache) = inner_fact(n - 1, cache)
+          let ret = result * n
+          let cache = cache |> dict.insert(n, ret) |> io.debug
+          #(ret, cache)
+        }
+      }
+    }
+  }
+}
+
+pub fn fact(n) {
+  let #(result, _) = inner_fact(n, dict.new())
+  result
 }
 
 pub fn grid(s: String, string_to_item: fn(String) -> Result(item, Nil)) {
