@@ -1,0 +1,11 @@
+[[tools.erlang]]
+version = "25.3.2.21"
+backend = "core:erlang"
+
+[[tools.gleam]]
+version = "1.4.1"
+backend = "aqua:gleam-lang/gleam"
+
+[[tools.rebar]]
+version = "3.24.0"
+backend = "asdf:rebar"
